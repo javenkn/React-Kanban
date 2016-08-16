@@ -37,31 +37,38 @@ const data = [
   }
 ];
 
+
+
 const Column = React.createClass({
   render: function () {
     const cardNodes = data.map(function (card, index) {
       return (
-        <Card key={index} title={ card.title }>{ card.priority }</Card>
+        <Card key={index} title={ card.title } />
       )
     });
+    console.log(cardNodes);
+    const columnTitles = ['Queue', 'In Progress', 'Done'];
     return (
-      <div className="column">
-        Column
-        { cardNodes }
+      <div className="kanbanBoard">
+      {columnTitles.map(function (title, index) {
+        return (
+          <div className="column" key={index}>
+            <div className="columnTitle">
+              {title}
+            </div>
+            { cardNodes }
+          </div>
+        )
+      })}
       </div>
-    )
+    );
   }
 });
 
 const KanbanBoard = React.createClass({
   render: function () {
     return (
-      <div className="kanbanBoard">
-        <h1>Kanban Board!</h1>
-        <Column />
-        <Column />
-        <Column />
-      </div>
+      <Column />
     )
   }
 });
