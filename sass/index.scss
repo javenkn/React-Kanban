@@ -2,3 +2,59 @@
 @import "partials/_general_styles";
 @import "partials/_clearfix";
 @import "partials/_reset";
+
+* {
+  box-sizing: border-box;
+}
+
+.kanbanBoard {
+  display: flex;
+  width: 100%;
+  height: 100vh;
+  text-align: center;
+}
+
+.column {
+  flex-flow: column wrap;
+  flex: 1 0 33%;
+  height: 100%;
+
+  &:nth-child(2) {
+    border-left: 1px solid black;
+    border-right: 1px solid black;
+  }
+
+  .columnTitle {
+    font-family: 'Amatic SC', cursive;
+    @include respond-to('medium'){
+      // for tablet
+      font-size: 52px;
+    }
+    @include respond-to('large'){
+      // for desktop
+      font-size: 55px;
+    }
+    font-size: 7vw;
+    padding: 20px;
+    border-bottom: 1px solid black;
+  }
+}
+
+.card {
+  @include respond-to('medium'){
+    // for tablet
+    font-size: 20px;
+  }
+  @include respond-to('large'){
+    // for desktop
+    font-size: 21px;
+  }
+  font-size: 2.7vw;
+  display: inline-block;
+  width: 70%;
+  height: 150px;
+  margin: auto;
+  margin-bottom: 5px;
+  margin-top: 5px;
+  padding: 10px;
+}
