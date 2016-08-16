@@ -1,6 +1,14 @@
 // Requires
 const app = require('./appBack');
+const db = require('./models');
 
-const server = app.listen(3000, () => {
-  console.log(`Listening on port ${server.address().port}`);
-});
+db.sequelize
+  .sync()
+  .then(function () {
+    var server = app.listen(3000, function () {
+      console.log(`Listening on port ${server.address().port}`);
+    });
+  })
+  .catch(function (err) {
+    return console.log(err);
+  });
