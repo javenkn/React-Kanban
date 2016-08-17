@@ -9,26 +9,10 @@ const User = db.User;
 const Card = db.Card;
 const user_card = db.user_card;
 
-Card.findAll({
-  include: [
-    {
-      model: User,
-      required: true
-    }
-  ]
-})
-.then((cards) => {
-  cards.forEach((card) => {
-    console.log(card.dataValues);
-    card.dataValues.Users.forEach((user) => {
-      console.log(user.dataValues);
-    });
-  });
-});
 
 
 // Middleware
-app.use(express.static(path.resolve(__dirname, 'public')));
+app.use('/', express.static(path.join(__dirname, 'public')));
 app.use(function (req, res, next) {
   res.setHeader('Access-Control-Allow-Origin', '*');
   res.setHeader('Cache-Control', 'no-cache');
@@ -36,8 +20,18 @@ app.use(function (req, res, next) {
 });
 
 // Routes
-app.get('/', (req, res) => {
-  res.send('Sanity check');
+app.get('/kanban/cards', (req, res) => {
+  Card.findAll({
+    include: [
+      {
+        model: User,
+        required: true
+      }
+    ]
+  })
+  .then((cards) => {
+    res.json(cards);
+  });
 });
 
 module.exports = app;
