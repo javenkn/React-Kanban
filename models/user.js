@@ -12,7 +12,7 @@ module.exports = function(sequelize, DataTypes) {
         // associations can be defined here
         models.User.belongsToMany(models.Card, {
           through: models.user_card,
-          foreignKey: 'card_id'
+          foreignKey: 'user_id'
         });
       }
     }
