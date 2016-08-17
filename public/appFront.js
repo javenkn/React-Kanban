@@ -46,7 +46,6 @@ const Column = React.createClass({
         <Card key={index} title={ card.title } />
       )
     });
-    console.log(cardNodes);
     const columnTitles = ['Queue', 'In Progress', 'Done'];
     return (
       <div className="kanbanBoard">
@@ -66,14 +65,36 @@ const Column = React.createClass({
 });
 
 const KanbanBoard = React.createClass({
+  loadCardsFromServer: function () {
+    $.ajax({
+      url: this.props.url,
+      dataType: 'json',
+      cache: false,
+      success: function (data) {
+        console.log('SUCCESS!');
+        console.log(data);
+        this.setState({ data: data });
+      }.bind(this),
+      error: function (xhr, status, err) {
+        console.error(this.props.url, status, err.toString());
+      }.bind(this)
+    });
+  },
+  getInitialState: function () {
+    return { data: [] };
+  },
+  componentDidMount: function () {
+    this.loadCardsFromServer();
+    setInterval(this.loadCardsFromServer, this.props.pollInterval);
+  },
   render: function () {
     return (
-      <Column />
+      <Column data={this.state.data} />
     )
   }
 });
 
 ReactDOM.render(
-  <KanbanBoard />,
+  <KanbanBoard url="/kanban/cards" pollInterval={10000} />,
   document.getElementById('app')
 );
