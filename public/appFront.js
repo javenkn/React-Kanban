@@ -2,48 +2,38 @@ const Card = React.createClass({
   render: function () {
     return (
       <div className="card">
-        <h2 className="cardTitle">
+        <div className="cardTitle">
           { this.props.title }
-        </h2>
+        </div>
+        <div className="cardCreator">
+          { 'Created by: ' + this.props.creator }
+        </div>
+        <div className="cardAssigned">
+          { 'Assigned to: ' + this.props.assigned }
+        </div>
+        <div className="cardPriority">
+          { 'Priority: ' + this.props.priority }
+        </div>
       </div>
     )
   }
 });
 
-const data = [
-  {
-    id: 1,
-    title: 'Finish work',
-    priority: 'low',
-    status: 'Queue',
-    createdBy: 'Bob',
-    assignedTo: 'Billy'
-  },
-  {
-    id: 2,
-    title: 'Finish assignment',
-    priority: 'low',
-    status: 'Queue',
-    createdBy: 'Billy',
-    assignedTo: 'Bob'
-  },
-  {
-    id: 3,
-    title: 'Finish task',
-    priority: 'low',
-    status: 'Queue',
-    createdBy: 'Will',
-    assignedTo: 'Billy'
-  }
-];
-
-
-
 const Column = React.createClass({
   render: function () {
-    const cardNodes = data.map(function (card, index) {
+    const cardNodes = this.props.data.map(function (card, index) {
+      const userObj = card.Users;
+      const usersAssignedToCard = userObj.map(function (user) {
+        return ' ' + user.first_name;
+      });
       return (
-        <Card key={index} title={ card.title } />
+        <Card
+          key={ index }
+          title={ card.title }
+          creator={ card.created_by }
+          assigned={ usersAssignedToCard }
+          priority={ card.priority }
+        />
       )
     });
     const columnTitles = ['Queue', 'In Progress', 'Done'];
@@ -55,7 +45,7 @@ const Column = React.createClass({
             <div className="columnTitle">
               {title}
             </div>
-            { cardNodes }
+            {cardNodes}
           </div>
         )
       })}
@@ -72,7 +62,6 @@ const KanbanBoard = React.createClass({
       cache: false,
       success: function (data) {
         console.log('SUCCESS!');
-        console.log(data);
         this.setState({ data: data });
       }.bind(this),
       error: function (xhr, status, err) {
