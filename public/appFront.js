@@ -21,7 +21,12 @@ const Card = React.createClass({
 
 const Column = React.createClass({
   render: function () {
-    const cardNodes = this.props.data.map(function (card, index) {
+    const statusOfColumn = this.props.status;
+    const organizedCardNodes = this.props.data.filter(function (card, index) {
+      console.log(statusOfColumn);
+      return card.status === statusOfColumn;
+    })
+    .map(function (card, index) {
       const userObj = card.Users;
       const usersAssignedToCard = userObj.map(function (user) {
         return ' ' + user.first_name;
@@ -36,21 +41,14 @@ const Column = React.createClass({
         />
       )
     });
-    const columnTitles = ['Queue', 'In Progress', 'Done'];
     return (
-      <div className="kanbanBoard">
-      {columnTitles.map(function (title, index) {
-        return (
-          <div className="column" key={index}>
-            <div className="columnTitle">
-              {title}
-            </div>
-            {cardNodes}
-          </div>
-        )
-      })}
+      <div className="column">
+        <div className="columnTitle">
+          { this.props.title }
+        </div>
+          { organizedCardNodes }
       </div>
-    );
+    )
   }
 });
 
@@ -78,7 +76,11 @@ const KanbanBoard = React.createClass({
   },
   render: function () {
     return (
-      <Column data={this.state.data} />
+      <div className="kanbanBoard">
+        <Column data={this.state.data} title="Queue" status={1} />
+        <Column data={this.state.data} title="In Progress" status={2} />
+        <Column data={this.state.data} title="Done" status={3} />
+      </div>
     )
   }
 });
