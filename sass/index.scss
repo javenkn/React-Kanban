@@ -14,12 +14,27 @@
   text-align: center;
 }
 
+.createButton {
+  display: block;
+  position: absolute;
+  border: 1px solid black;
+  padding: 0px;
+  padding-right: 10px;
+  padding-left: 10px;
+  padding-bottom: 5px;
+  background-color: white;
+  font-size: 30px;
+  text-align: center;
+  margin-top: 5px;
+  margin-left: 5px;
+}
+
 .column {
   flex-flow: column wrap;
-  flex: 1 0 33%;
+  flex: 1 0 30%;
   height: 100%;
 
-  &:nth-child(2) {
+  &:nth-child(3) {
     border-left: 1px solid black;
     border-right: 1px solid black;
   }
