@@ -1,3 +1,13 @@
+const Create = React.createClass({
+  render: function () {
+    return (
+      <button className="createButton">
+        { '+' }
+      </button>
+    )
+  }
+});
+
 const Card = React.createClass({
   render: function () {
     return (
@@ -23,7 +33,6 @@ const Column = React.createClass({
   render: function () {
     const statusOfColumn = this.props.status;
     const organizedCardNodes = this.props.data.filter(function (card, index) {
-      console.log(statusOfColumn);
       return card.status === statusOfColumn;
     })
     .sort(function (cardA, cardB) { // put highest priority on top
@@ -99,6 +108,7 @@ const KanbanBoard = React.createClass({
   render: function () {
     return (
       <div className="kanbanBoard">
+        <Create />
         <Column data={this.state.data} title="Queue" status={1} />
         <Column data={this.state.data} title="In Progress" status={2} />
         <Column data={this.state.data} title="Done" status={3} />
