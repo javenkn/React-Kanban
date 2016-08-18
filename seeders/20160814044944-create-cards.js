@@ -7,7 +7,7 @@ module.exports = {
     return queryInterface.bulkInsert('cards', [
     {
       title: 'Important business',
-      priority: 100,
+      priority: Math.floor(Math.random() * 100),
       status: 1,
       created_by: 'Jeff',
       assigned_to: 'Bob',
@@ -25,7 +25,7 @@ module.exports = {
     },
     {
       title: faker.name.jobTitle(),
-      priority: 100,
+      priority: Math.floor(Math.random() * 100),
       status: 2,
       created_by: 'Jeff',
       assigned_to: 'Bob',
@@ -34,7 +34,7 @@ module.exports = {
     },
     {
       title: faker.name.jobTitle(),
-      priority: 100,
+      priority: Math.floor(Math.random() * 100),
       status: 2,
       created_by: 'Bob',
       assigned_to: 'Jeff',
@@ -43,7 +43,7 @@ module.exports = {
     },
     {
       title: faker.name.jobTitle(),
-      priority: 100,
+      priority: Math.floor(Math.random() * 100),
       status: 3,
       created_by: 'Bob',
       assigned_to: 'Jeff',
