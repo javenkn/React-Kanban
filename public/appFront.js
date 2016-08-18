@@ -26,11 +26,33 @@ const Column = React.createClass({
       console.log(statusOfColumn);
       return card.status === statusOfColumn;
     })
+    .sort(function (cardA, cardB) { // put highest priority on top
+      if(cardA.priority > cardB.priority) {
+        return -1;
+      } else if (cardA.priority < cardB.priority) {
+        return 1;
+      }
+      return 0;
+    })
     .map(function (card, index) {
       const userObj = card.Users;
       const usersAssignedToCard = userObj.map(function (user) {
         return ' ' + user.first_name;
       });
+      switch(true) {
+        case (card.priority === 100):
+          card.priority = 'Blocker';
+          break;
+        case (card.priority >= 80 && card.priority <= 99):
+          card.priority = 'High';
+          break;
+        case (card.priority >= 50 && card.priority < 80):
+          card.priority = 'Medium';
+          break;
+        case (card.priority > 0):
+          card.priority = 'Low';
+          break;
+      }
       return (
         <Card
           key={ index }
