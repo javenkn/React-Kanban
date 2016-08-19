@@ -1,7 +1,29 @@
+const CardForm = React.createClass({
+  render: function () {
+    return (
+      <div className="createCard">
+        <h1>
+          Create a card
+        </h1>
+        <form className="cardForm">
+          <input type="text" placeholder="Title" />
+          <input type="text" placeholder="Priority" />
+          <input type="text" placeholder="Created By" />
+          <input type="text" placeholder="Assigned To (seperate names with commas)" />
+          <input type="submit" value="Create" />
+        </form>
+        <button>
+          {'Cancel'}
+        </button>
+      </div>
+    )
+  }
+})
+
 const Create = React.createClass({
   render: function () {
     return (
-      <button className="createButton">
+      <button className="createButton" onClick={this.props.handleClick}>
         { '+' }
       </button>
     )
@@ -98,8 +120,12 @@ const KanbanBoard = React.createClass({
       }.bind(this)
     });
   },
+  toggleForm: function () {
+    this.setState({ showForm: !this.state.showForm });
+  },
   getInitialState: function () {
-    return { data: [] };
+    return { data: [],
+             showForm: false };
   },
   componentDidMount: function () {
     this.loadCardsFromServer();
@@ -108,7 +134,8 @@ const KanbanBoard = React.createClass({
   render: function () {
     return (
       <div className="kanbanBoard">
-        <Create />
+        <Create handleClick={this.toggleForm}/>
+        {this.state.showForm ? <CardForm /> : null}
         <Column data={this.state.data} title="Queue" status={1} />
         <Column data={this.state.data} title="In Progress" status={2} />
         <Column data={this.state.data} title="Done" status={3} />
