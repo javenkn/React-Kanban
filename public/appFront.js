@@ -1,3 +1,13 @@
+const CancelForm = React.createClass({
+  render: function () {
+    return (
+      <button className="cancelButton" onClick={this.props.handleCancelClick}>
+        { 'Cancel' }
+      </button>
+    )
+  }
+});
+
 const CardForm = React.createClass({
   render: function () {
     return (
@@ -12,9 +22,7 @@ const CardForm = React.createClass({
           <input type="text" placeholder="Assigned To (seperate names with commas)" />
           <input type="submit" value="Create" />
         </form>
-        <button>
-          {'Cancel'}
-        </button>
+        <CancelForm handleCancelClick={this.props.toggleStatus}/>
       </div>
     )
   }
@@ -132,10 +140,11 @@ const KanbanBoard = React.createClass({
     setInterval(this.loadCardsFromServer, this.props.pollInterval);
   },
   render: function () {
+    console.log(this.state.showForm);
     return (
       <div className="kanbanBoard">
-        <Create handleClick={this.toggleForm}/>
-        {this.state.showForm ? <CardForm /> : null}
+        <Create handleClick={ this.toggleForm } />
+        {this.state.showForm ? <CardForm toggleStatus={ this.toggleForm } /> : null}
         <Column data={this.state.data} title="Queue" status={1} />
         <Column data={this.state.data} title="In Progress" status={2} />
         <Column data={this.state.data} title="Done" status={3} />
