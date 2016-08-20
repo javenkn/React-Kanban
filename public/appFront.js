@@ -1,7 +1,7 @@
 const LeftButton = React.createClass({
   render: function () {
     return (
-      <button className="leftButton">
+      <button className="leftButton" onClick={ this.props.handleLeftClick }>
         {'<'}
       </button>
     );
@@ -11,7 +11,7 @@ const LeftButton = React.createClass({
 const RightButton = React.createClass({
   render: function () {
     return (
-      <button className="rightButton">
+      <button className="rightButton" onClick={ this.props.handleRightClick }>
         {'>'}
       </button>
     );
@@ -126,8 +126,16 @@ const CreateButton = React.createClass({
 const Card = React.createClass({
   getInitialState: function () {
     return {
-      showOptions: false
+      showOptions: false,
+      column: this.props.status
     }
+  },
+  moveRight: function () {
+    console.log(this.props.status + 1);
+    this.setState({ column: this.props.status + 1 });
+  },
+  moveLeft: function () {
+    this.setState({ column: this.props.status - 1 });
   },
   toggleOptions: function () {
     this.setState({ showOptions: !this.state.showOptions });
@@ -136,28 +144,30 @@ const Card = React.createClass({
     let moveButtons;
     switch(this.props.status){
       case 1:
-        moveButtons = <RightButton />;
+        moveButtons = <RightButton handleRightClick={ this.moveRight } />;
         break;
       case 2:
-        moveButtons = <div><LeftButton /><RightButton /></div>;
+        moveButtons = <div><LeftButton handleRightClick={ this.moveLeft } /><RightButton handleRightClick={ this.moveRight } /></div>;
         break;
       case 3:
-        moveButtons = <LeftButton />;
+        moveButtons = <LeftButton handleLeftClick={ this.moveLeft } />;
         break;
     }
     return (
-      <div className="card" onClick={ this.toggleOptions }>
-        <div className="cardTitle">
-          { this.props.title }
-        </div>
-        <div className="cardCreator">
-          { 'Created by: ' + this.props.creator }
-        </div>
-        <div className="cardAssigned">
-          { 'Assigned to: ' + this.props.assigned }
-        </div>
-        <div className="cardPriority">
-          { 'Priority: ' + this.props.priority }
+      <div className="card">
+        <div className="content" onClick={ this.toggleOptions }>
+          <div className="cardTitle">
+            { this.props.title }
+          </div>
+          <div className="cardCreator">
+            { 'Created by: ' + this.props.creator }
+          </div>
+          <div className="cardAssigned">
+            { 'Assigned to: ' + this.props.assigned }
+          </div>
+          <div className="cardPriority">
+            { 'Priority: ' + this.props.priority }
+          </div>
         </div>
         { this.state.showOptions ? <OptionButtons /> : null }
         { this.props.status ? moveButtons : null }
