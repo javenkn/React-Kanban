@@ -1,16 +1,20 @@
-const leftButton = React.createClass({
+const LeftButton = React.createClass({
   render: function () {
-    <button className="leftButton">
-      {'<'}
-    </button>
+    return (
+      <button className="leftButton">
+        {'<'}
+      </button>
+    );
   }
 });
 
-const rightButton = React.createClass({
+const RightButton = React.createClass({
   render: function () {
-    <button className="leftButton">
-      {'>'}
-    </button>
+    return (
+      <button className="rightButton">
+        {'>'}
+      </button>
+    );
   }
 });
 
@@ -129,6 +133,18 @@ const Card = React.createClass({
     this.setState({ showOptions: !this.state.showOptions });
   },
   render: function () {
+    let moveButtons;
+    switch(this.props.status){
+      case 1:
+        moveButtons = <RightButton />;
+        break;
+      case 2:
+        moveButtons = <div><LeftButton /><RightButton /></div>;
+        break;
+      case 3:
+        moveButtons = <LeftButton />;
+        break;
+    }
     return (
       <div className="card" onClick={ this.toggleOptions }>
         <div className="cardTitle">
@@ -144,6 +160,7 @@ const Card = React.createClass({
           { 'Priority: ' + this.props.priority }
         </div>
         { this.state.showOptions ? <OptionButtons /> : null }
+        { this.props.status ? moveButtons : null }
       </div>
     )
   }
@@ -186,6 +203,7 @@ const Column = React.createClass({
           creator={ card.created_by }
           assigned={ card.assigned_to }
           priority={ card.priority }
+          status={ card.status }
         />
       )
     });
