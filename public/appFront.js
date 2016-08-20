@@ -54,7 +54,7 @@ const CardForm = React.createClass({
           />
           <input
             type="text"
-            placeholder="Priority"
+            placeholder="Priority (Rate from 1 (lowest) - 100 (highest/blocker))"
             value={this.state.priority}
             onChange={this.handlePriorityChange}
           />
