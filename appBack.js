@@ -57,7 +57,7 @@ app.route('/kanban/cards')
           });
         });
       } else {
-        console.log('Cannot find all users that are assigned to this card')
+        console.log('Cannot find all users that are assigned to this card');
       }
     });
   });
