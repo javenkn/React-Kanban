@@ -37,11 +37,25 @@ app.route('/kanban/cards')
   .post((req, res) => {
     const assignedNames = req.body.assigned_to.split(',').map((user) => {
       let cleanUser = user.replace(/[^A-Za-z0-9]/g, '');
-      return cleanUser.trim();
+      let properUser = cleanUser.properName();
+      return properUser.trim();
+    });
+    console.log(assignedNames);
+    User.findAll({
+      where: {
+        first_name: assignedNames
+      }
+    })
+    .then((users) => {
+      users.forEach((user) => {
+        console.log(user.id);
+      });
     });
     // Card.create()
   });
 
-
+String.prototype.properName = function() {
+  return this.charAt(0).toUpperCase() + this.slice(1).toLowerCase();
+};
 
 module.exports = app;
