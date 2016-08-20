@@ -1,7 +1,38 @@
+const leftButton = React.createClass({
+  render: function () {
+    <button className="leftButton">
+      {'<'}
+    </button>
+  }
+});
+
+const rightButton = React.createClass({
+  render: function () {
+    <button className="leftButton">
+      {'>'}
+    </button>
+  }
+});
+
+const OptionButtons = React.createClass({
+  render: function () {
+    return (
+      <div className="optionButtons">
+        <button className="editButton">
+          {'Edit'}
+        </button>
+        <button className="deleteButton">
+          {'Delete'}
+        </button>
+      </div>
+    )
+  }
+});
+
 const CancelFormButton = React.createClass({
   render: function () {
     return (
-      <button className="cancelButton" onClick={this.props.handleCancelClick}>
+      <button className="cancelButton" onClick={ this.props.handleCancelClick }>
         { 'Cancel' }
       </button>
     )
@@ -89,9 +120,17 @@ const CreateButton = React.createClass({
 });
 
 const Card = React.createClass({
+  getInitialState: function () {
+    return {
+      showOptions: false
+    }
+  },
+  toggleOptions: function () {
+    this.setState({ showOptions: !this.state.showOptions });
+  },
   render: function () {
     return (
-      <div className="card">
+      <div className="card" onClick={ this.toggleOptions }>
         <div className="cardTitle">
           { this.props.title }
         </div>
@@ -104,6 +143,7 @@ const Card = React.createClass({
         <div className="cardPriority">
           { 'Priority: ' + this.props.priority }
         </div>
+        { this.state.showOptions ? <OptionButtons /> : null }
       </div>
     )
   }
@@ -194,21 +234,30 @@ const KanbanBoard = React.createClass({
   },
   getInitialState: function () {
     return { data: [],
-             showForm: false };
+             showForm: false
+          };
   },
   componentDidMount: function () {
     this.loadCardsFromServer();
     setInterval(this.loadCardsFromServer, this.props.pollInterval);
   },
   render: function () {
-    console.log(this.state.showForm);
     return (
       <div className="kanbanBoard">
         <CreateButton handleClick={ this.toggleForm } />
-        {this.state.showForm ? <CardForm onCardSubmit={this.handleCardCreate} toggleStatus={ this.toggleForm } /> : null}
-        <Column data={this.state.data} title="Queue" status={1} />
-        <Column data={this.state.data} title="In Progress" status={2} />
-        <Column data={this.state.data} title="Done" status={3} />
+        {this.state.showForm ? <CardForm onCardSubmit={ this.handleCardCreate } toggleStatus={ this.toggleForm } /> : null}
+        <Column data={this.state.data}
+                title="Queue"
+                status={1}
+        />
+        <Column data={this.state.data}
+                title="In Progress"
+                status={2}
+        />
+        <Column data={this.state.data}
+                title="Done"
+                status={3}
+        />
       </div>
     )
   }
