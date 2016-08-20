@@ -32,9 +32,12 @@ const CardForm = React.createClass({
     let assigned_to = this.state.assigned_to.trim();
     if(!title || !priority || !created_by || !assigned_to) {
       return;
+    } else if(isNaN(parseInt(priority))){
+      return;
+    } else {
+      this.props.onCardSubmit({title: title, priority: priority, created_by: created_by, assigned_to: assigned_to})
+      this.setState({title: '', priority: '', created_by: '', assigned_to: ''})
     }
-    this.props.onCardSubmit({title: title, priority: priority, created_by: created_by, assigned_to: assigned_to})
-    this.setState({title: '', priority: '', created_by: '', assigned_to: ''})
   },
   render: function () {
     return (
@@ -122,9 +125,6 @@ const Column = React.createClass({
     })
     .map(function (card, index) {
       const userObj = card.Users;
-      const usersAssignedToCard = userObj.map(function (user) {
-        return ' ' + user.first_name;
-      });
       switch(true) {
         case (card.priority === 100):
           card.priority = 'Blocker';
@@ -144,7 +144,7 @@ const Column = React.createClass({
           key={ index }
           title={ card.title }
           creator={ card.created_by }
-          assigned={ usersAssignedToCard }
+          assigned={ card.assigned_to }
           priority={ card.priority }
         />
       )
