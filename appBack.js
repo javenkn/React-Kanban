@@ -4,6 +4,7 @@ const bodyParser = require('body-parser');
 const path = require('path');
 const app = express();
 
+require('./lib/string'); // custom string function
 const db = require('./models');
 const User = db.User;
 const Card = db.Card;
@@ -35,27 +36,30 @@ app.route('/kanban/cards')
     });
   })
   .post((req, res) => {
+    const title = req.body.title.properName(); // makes the title proper
+    const created_by = req.body.created_by.properName(); // makes the created by user proper
     const assignedNames = req.body.assigned_to.split(',').map((user) => {
       let cleanUser = user.replace(/[^A-Za-z0-9]/g, '');
       let properUser = cleanUser.properName();
-      return properUser.trim();
+      return properUser;
     });
-    console.log(assignedNames);
-    User.findAll({
+    User.findAll({ // find all of the users that are assigned to the created card
       where: {
         first_name: assignedNames
       }
     })
     .then((users) => {
-      users.forEach((user) => {
-        console.log(user.id);
-      });
+      if(users.length === assignedNames.length) {
+        Card.create({ title: title, priority: req.body.priority, created_by: created_by, assigned_to: assignedNames.join(', ') })
+        .then((card) => {
+          users.forEach((user) => { // for each assigned user create a user_card
+            user_card.create({ user_id: user.id, card_id: card.id });
+          });
+        });
+      } else {
+        console.log('Cannot find all users that are assigned to this card')
+      }
     });
-    // Card.create()
   });
-
-String.prototype.properName = function() {
-  return this.charAt(0).toUpperCase() + this.slice(1).toLowerCase();
-};
 
 module.exports = app;
