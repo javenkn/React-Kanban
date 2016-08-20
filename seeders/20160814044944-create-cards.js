@@ -19,7 +19,7 @@ module.exports = {
       priority: 100,
       status: 1,
       created_by: 'Bob',
-      assigned_to: 'Jeff',
+      assigned_to: 'Bob, Jeff',
       createdAt: new Date(),
       updatedAt: new Date()
     },
@@ -28,7 +28,7 @@ module.exports = {
       priority: Math.floor(Math.random() * 100),
       status: 2,
       created_by: 'Jeff',
-      assigned_to: 'Bob',
+      assigned_to: 'Bob, Jeff',
       createdAt: new Date(),
       updatedAt: new Date()
     },
@@ -46,7 +46,7 @@ module.exports = {
       priority: Math.floor(Math.random() * 100),
       status: 3,
       created_by: 'Bob',
-      assigned_to: 'Jeff',
+      assigned_to: 'Bob, Jeff',
       createdAt: new Date(),
       updatedAt: new Date()
     }
