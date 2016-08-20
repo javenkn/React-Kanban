@@ -1,4 +1,4 @@
-const CancelForm = React.createClass({
+const CancelFormButton = React.createClass({
   render: function () {
     return (
       <button className="cancelButton" onClick={this.props.handleCancelClick}>
@@ -9,26 +9,73 @@ const CancelForm = React.createClass({
 });
 
 const CardForm = React.createClass({
+  getInitialState: function () {
+    return {title: '', priority: '', created_by: '', assigned_to: ''}
+  },
+  handleTitleChange: function (e) {
+    this.setState({title: e.target.value});
+  },
+  handlePriorityChange: function (e) {
+    this.setState({priority: e.target.value});
+  },
+  handleCreatedChange: function (e) {
+    this.setState({created_by: e.target.value});
+  },
+  handleAssignChange: function (e) {
+    this.setState({assigned_to: e.target.value});
+  },
+  handleSubmit: function (e) {
+    e.preventDefault();
+    let title = this.state.title.trim();
+    let priority = this.state.priority.trim();
+    let created_by = this.state.created_by.trim();
+    let assigned_to = this.state.assigned_to.trim();
+    if(!title || !priority || !created_by || !assigned_to) {
+      return;
+    }
+    this.props.onCardSubmit({title: title, priority: priority, created_by: created_by, assigned_to: assigned_to})
+    this.setState({title: '', priority: '', created_by: '', assigned_to: ''})
+  },
   render: function () {
     return (
       <div className="createCard">
         <h1>
           Create a card
         </h1>
-        <form className="cardForm">
-          <input type="text" placeholder="Title" />
-          <input type="text" placeholder="Priority" />
-          <input type="text" placeholder="Created By" />
-          <input type="text" placeholder="Assigned To (seperate names with commas)" />
+        <form className="cardForm" onSubmit={this.handleSubmit}>
+          <input
+            type="text"
+            placeholder="Title"
+            value={this.state.title}
+            onChange={this.handleTitleChange}
+          />
+          <input
+            type="text"
+            placeholder="Priority"
+            value={this.state.priority}
+            onChange={this.handlePriorityChange}
+          />
+          <input
+            type="text"
+            placeholder="Created By"
+            value={this.state.created_by}
+            onChange={this.handleCreatedChange}
+          />
+          <input
+            type="text"
+            placeholder="Assigned To (seperate names with commas)"
+            value={this.state.assigned_to}
+            onChange={this.handleAssignChange}
+          />
           <input type="submit" value="Create" />
         </form>
-        <CancelForm handleCancelClick={this.props.toggleStatus}/>
+        <CancelFormButton handleCancelClick={this.props.toggleStatus}/>
       </div>
     )
   }
 })
 
-const Create = React.createClass({
+const CreateButton = React.createClass({
   render: function () {
     return (
       <button className="createButton" onClick={this.props.handleClick}>
@@ -128,6 +175,20 @@ const KanbanBoard = React.createClass({
       }.bind(this)
     });
   },
+  handleCardCreate: function (card) {
+    $.ajax({
+      url: this.props.url,
+      dataType: 'json',
+      type: 'POST',
+      data: card,
+      success: function (data) {
+        this.setState({ data: data });
+      }.bind(this),
+      error: function (xhr, status, err) {
+        console.error(this.props.url, status, err.toString());
+      }.bind(this)
+    });
+  },
   toggleForm: function () {
     this.setState({ showForm: !this.state.showForm });
   },
@@ -143,8 +204,8 @@ const KanbanBoard = React.createClass({
     console.log(this.state.showForm);
     return (
       <div className="kanbanBoard">
-        <Create handleClick={ this.toggleForm } />
-        {this.state.showForm ? <CardForm toggleStatus={ this.toggleForm } /> : null}
+        <CreateButton handleClick={ this.toggleForm } />
+        {this.state.showForm ? <CardForm onCardSubmit={this.handleCardCreate} toggleStatus={ this.toggleForm } /> : null}
         <Column data={this.state.data} title="Queue" status={1} />
         <Column data={this.state.data} title="In Progress" status={2} />
         <Column data={this.state.data} title="Done" status={3} />
