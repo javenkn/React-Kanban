@@ -1,4 +1,5 @@
 /node_modules
 
-#CSS
+#Public ignores
 /public/css/*
+/public/js/*
