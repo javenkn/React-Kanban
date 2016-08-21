@@ -25,7 +25,7 @@ const OptionButtons = React.createClass({
         <button className="editButton">
           {'Edit'}
         </button>
-        <button className="deleteButton">
+        <button className="deleteButton" onClick={ this.props.handleDeleteClick }>
           {'Delete'}
         </button>
       </div>
@@ -126,16 +126,17 @@ const CreateButton = React.createClass({
 const Card = React.createClass({
   getInitialState: function () {
     return {
-      showOptions: false,
-      column: this.props.status
+      showOptions: false
     }
   },
+  delete: function () {
+    this.props.removeCard(this.props.id);
+  },
   moveRight: function () {
-    console.log(this.props.status + 1);
-    this.setState({ column: this.props.status + 1 });
+    this.props.changedStatus(this.props.id, this.props.status+1);
   },
   moveLeft: function () {
-    this.setState({ column: this.props.status - 1 });
+    this.props.changedStatus(this.props.id, this.props.status-1);
   },
   toggleOptions: function () {
     this.setState({ showOptions: !this.state.showOptions });
@@ -147,7 +148,7 @@ const Card = React.createClass({
         moveButtons = <RightButton handleRightClick={ this.moveRight } />;
         break;
       case 2:
-        moveButtons = <div><LeftButton handleRightClick={ this.moveLeft } /><RightButton handleRightClick={ this.moveRight } /></div>;
+        moveButtons = <div><LeftButton handleLeftClick={ this.moveLeft } /><RightButton handleRightClick={ this.moveRight } /></div>;
         break;
       case 3:
         moveButtons = <LeftButton handleLeftClick={ this.moveLeft } />;
@@ -169,7 +170,7 @@ const Card = React.createClass({
             { 'Priority: ' + this.props.priority }
           </div>
         </div>
-        { this.state.showOptions ? <OptionButtons /> : null }
+        { this.state.showOptions ? <OptionButtons handleDeleteClick={ this.delete }/> : null }
         { this.props.status ? moveButtons : null }
       </div>
     )
@@ -178,6 +179,8 @@ const Card = React.createClass({
 
 const Column = React.createClass({
   render: function () {
+    const deleteGetter = this.props.deleteCard;
+    const moveCard = this.props.moveCard;
     const statusOfColumn = this.props.status;
     const organizedCardNodes = this.props.data.filter(function (card, index) {
       return card.status === statusOfColumn;
@@ -208,12 +211,15 @@ const Column = React.createClass({
       }
       return (
         <Card
+          id={ card.id }
           key={ index }
           title={ card.title }
           creator={ card.created_by }
           assigned={ card.assigned_to }
           priority={ card.priority }
           status={ card.status }
+          changedStatus={ moveCard }
+          removeCard={ deleteGetter }
         />
       )
     });
@@ -235,7 +241,6 @@ const KanbanBoard = React.createClass({
       dataType: 'json',
       cache: false,
       success: function (data) {
-        console.log('SUCCESS!');
         this.setState({ data: data });
       }.bind(this),
       error: function (xhr, status, err) {
@@ -250,6 +255,36 @@ const KanbanBoard = React.createClass({
       type: 'POST',
       data: card,
       success: function (data) {
+        this.setState({ data: data });
+      }.bind(this),
+      error: function (xhr, status, err) {
+        console.error(this.props.url, status, err.toString());
+      }.bind(this)
+    });
+  },
+  updateCardStatus: function (id, newStatusId) {
+    $.ajax({
+      url: this.props.url + '/' + id,
+      dataType: 'json',
+      type: 'PUT',
+      data: { newStatus: newStatusId },
+      success: function (data) {
+        console.log(data);
+        this.setState({ data: data });
+      }.bind(this),
+      error: function (xhr, status, err) {
+        console.error(this.props.url, status, err.toString());
+      }.bind(this)
+    });
+  },
+  handleDeleteCard: function (id) {
+    $.ajax({
+      url: this.props.url + '/' + id,
+      dataType: 'json',
+      type: 'DELETE',
+      data: { idToDelete: id },
+      success: function (data) {
+        console.log(data)
         this.setState({ data: data });
       }.bind(this),
       error: function (xhr, status, err) {
@@ -277,14 +312,20 @@ const KanbanBoard = React.createClass({
         <Column data={this.state.data}
                 title="Queue"
                 status={1}
+                moveCard={ this.updateCardStatus }
+                deleteCard={this.handleDeleteCard}
         />
         <Column data={this.state.data}
                 title="In Progress"
                 status={2}
+                moveCard={ this.updateCardStatus }
+                deleteCard={this.handleDeleteCard}
         />
         <Column data={this.state.data}
                 title="Done"
                 status={3}
+                moveCard={ this.updateCardStatus }
+                deleteCard={this.handleDeleteCard}
         />
       </div>
     )
