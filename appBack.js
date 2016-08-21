@@ -60,6 +60,31 @@ app.route('/kanban/cards')
         console.log('Cannot find all users that are assigned to this card');
       }
     });
-  });
+  })
+
+  app.route('/kanban/cards/:id')
+    .put((req, res) => {
+      if(!isNaN(req.params.id)) {
+        Card.findById(req.params.id)
+        .then((card) => {
+          card.update({ status: parseInt(req.body.newStatus) })
+          // .then((updatedCard) => {
+          //   res.json([updatedCard]);
+          // });
+        });
+      } else {
+        res.json('There is no id of ' + req.params.id);
+      }
+    })
+    .delete((req, res) => {
+      Card.findById(req.body.idToDelete)
+      .then(card => {
+        if(card){
+          card.destroy();
+        } else {
+          res.json('There is no id of ' + req.params.id);
+        }
+      });
+    });
 
 module.exports = app;
