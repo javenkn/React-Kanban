@@ -269,7 +269,6 @@ const KanbanBoard = React.createClass({
       type: 'PUT',
       data: { newStatus: newStatusId },
       success: function (data) {
-        console.log(data);
         this.setState({ data: data });
       }.bind(this),
       error: function (xhr, status, err) {
