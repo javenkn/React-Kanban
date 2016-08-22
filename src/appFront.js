@@ -283,7 +283,6 @@ const KanbanBoard = React.createClass({
       type: 'DELETE',
       data: { idToDelete: id },
       success: function (data) {
-        console.log(data)
         this.setState({ data: data });
       }.bind(this),
       error: function (xhr, status, err) {
@@ -332,6 +331,6 @@ const KanbanBoard = React.createClass({
 });
 
 ReactDOM.render(
-  <KanbanBoard url="/kanban/cards" pollInterval={10000} />,
+  <KanbanBoard url="/kanban/cards" pollInterval={1000} />,
   document.getElementById('app')
 );
