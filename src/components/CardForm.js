@@ -1,4 +1,4 @@
-import react from 'react';
+import React from 'react';
 import CancelFormButton from '../components/CancelFormButton.js';
 
 class CardForm extends React.component {

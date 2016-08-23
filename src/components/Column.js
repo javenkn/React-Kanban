@@ -1,4 +1,4 @@
-import react from 'react';
+import React from 'react';
 import Card from '../components/Card.js';
 
 class Column extends React.component {

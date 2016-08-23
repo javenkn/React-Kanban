@@ -1,4 +1,4 @@
-import react from 'react';
+import React from 'react';
 import OptionButtons from '../components/OptionButtons.js';
 import RightButton from '../components/RightButton.js';
 import LeftButton from '../components/LeftButton.js';

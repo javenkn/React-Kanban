@@ -1,20 +1,28 @@
-import react from 'react';
-import Column from '../components/Column.js';
-import CreateButton from '../components/CreateButton.js';
-import CardForm from '../components/CardForm.js';
+import React from 'react';
+// import Column from '../components/Column.js';
+// import CreateButton from '../components/CreateButton.js';
+// import CardForm from '../components/CardForm.js';
 
-class KanbanBoard extends React.component {
+class KanbanBoard extends React.Component {
+  constructor (props) {
+    super();
+    this.state = {
+      data: [],
+      showForm: false
+    };
+    this.loadCardsFromServer = this.loadCardsFromServer.bind(this);
+  }
   loadCardsFromServer () {
     $.ajax({
       url: this.props.url,
       dataType: 'json',
       cache: false,
-      success: function (data) {
+      success: (data) => {
         this.setState({ data: data });
-      }.bind(this),
-      error: function (xhr, status, err) {
+      },
+      error: (xhr, status, err) => {
         console.error(this.props.url, status, err.toString());
-      }.bind(this)
+      }
     });
   }
   handleCardCreate (card) {
@@ -62,11 +70,6 @@ class KanbanBoard extends React.component {
   toggleForm () {
     this.setState({ showForm: !this.state.showForm });
   }
-  getInitialState () {
-    return { data: [],
-             showForm: false
-          };
-  }
   componentDidMount () {
     this.loadCardsFromServer();
     setInterval(this.loadCardsFromServer, this.props.pollInterval);
@@ -74,26 +77,6 @@ class KanbanBoard extends React.component {
   render () {
     return (
       <div className="kanbanBoard">
-        <CreateButton handleClick={ this.toggleForm } />
-        {this.state.showForm ? <CardForm onCardSubmit={ this.handleCardCreate } toggleStatus={ this.toggleForm } /> : null}
-        <Column data={this.state.data}
-                title="Queue"
-                status={1}
-                moveCard={ this.updateCardStatus }
-                deleteCard={this.handleDeleteCard}
-        />
-        <Column data={this.state.data}
-                title="In Progress"
-                status={2}
-                moveCard={ this.updateCardStatus }
-                deleteCard={this.handleDeleteCard}
-        />
-        <Column data={this.state.data}
-                title="Done"
-                status={3}
-                moveCard={ this.updateCardStatus }
-                deleteCard={this.handleDeleteCard}
-        />
       </div>
     )
   }
